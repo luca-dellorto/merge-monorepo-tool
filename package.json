@@ -7,6 +7,10 @@
   "bin": {
     "merge-monorepo": "./index.js"
   },
+  "scripts": {
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
+  },
   "type": "module",
   "license": "MIT",
   "keywords": [
@@ -34,6 +38,8 @@
     "@semantic-release/git": "^10.0.0",
     "@semantic-release/github": "^9.0.0",
     "@semantic-release/npm": "^11.0.0",
-    "semantic-release": "^24.2.7"
+    "@vitest/coverage-v8": "^3.2.4",
+    "semantic-release": "^24.2.7",
+    "vitest": "^3.2.4"
   }
 }
