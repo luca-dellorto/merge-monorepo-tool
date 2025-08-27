@@ -1,5 +1,9 @@
 # merge-monorepo-tool
 
+[![npm version](https://img.shields.io/npm/v/merge-monorepo-tool.svg)](https://www.npmjs.com/package/merge-monorepo-tool)
+[![CI](https://github.com/luca-dellorto/merge-monorepo-tool/actions/workflows/ci.yml/badge.svg)](https://github.com/luca-dellorto/merge-monorepo-tool/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 **CLI tool to merge multiple repositories into a monorepo while preserving Git history.**
 
 ## Features
@@ -17,7 +21,7 @@ You can install globally or use via `npx`:
 ```sh
 npm install -g merge-monorepo-tool
 # or
-npx merge-monorepo
+npx merge-monorepo-tool
 ```
 
 ## Usage
@@ -27,7 +31,7 @@ npx merge-monorepo
 Generate a sample configuration file:
 
 ```sh
-npx merge-monorepo init
+npx merge-monorepo-tool init
 ```
 
 Edit `monorepo-merge-config.json` to set your repositories and desired subfolders.
@@ -37,7 +41,7 @@ Edit `monorepo-merge-config.json` to set your repositories and desired subfolder
 Run the merge process:
 
 ```sh
-npx merge-monorepo merge
+npx merge-monorepo-tool merge
 ```
 
 ## Configuration

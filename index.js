@@ -4,8 +4,6 @@ import fs from 'fs';
 import path from 'path';
 import { execa } from 'execa';
 import os from 'os';
-import { fileURLToPath } from 'url';
-import { promisify } from 'util';
 import { mkdtemp, rm, cp } from 'fs/promises';
 
 const CONFIG_FILENAME = 'monorepo-merge-config.json';
@@ -32,13 +30,13 @@ const command = process.argv[2];
 
 function printHelp() {
   console.log(`
-    Usage: npx import-monorepo <command>
+   Usage: npx import-monorepo <command>
 
-    Comandi disponibili:
-    init   - Crea un file di configurazione di esempio
-    merge  - Esegue la migrazione dei repository nel monorepo
+    Available commands:
+    init   - Create a sample configuration file
+    merge  - Migrate repositories into the monorepo
 
-    Esempi:
+    Examples:
     npx import-monorepo init
     npx import-monorepo merge
     `);
@@ -57,7 +55,7 @@ async function ensureGitFilterRepo() {
   try {
     await execa('git-filter-repo', ['--help']);
   } catch {
-    logError("'git-filter-repo' non trovato. Installalo manualmente (https://github.com/newren/git-filter-repo)");
+    logError("'git-filter-repo' not found. Please install it manually (https://github.com/newren/git-filter-repo)");
     process.exit(1);
   }
 }
@@ -68,7 +66,7 @@ async function run(cmd, opts = {}) {
     const { stdout } = await execa(command, args, opts);
     return stdout;
   } catch (err) {
-    logError(`Errore eseguendo: ${cmd.join(' ')}`);
+    logError(`Error executing: ${cmd.join(' ')}`);
     console.error(err.stdout);
     process.exit(1);
   }
@@ -80,7 +78,7 @@ async function migrateRepo(repo, rootDir) {
   const branches = repo.branches;
   const includeTags = repo.tags;
 
-  logStep(`Inizio migrazione di: ${source} → sottocartella '${subdir}'`);
+  logStep(`Starting migration: ${source} → subdirectory '${subdir}'`);
 
   const tmp = await mkdtemp(path.join(os.tmpdir(), 'monorepo-'));
   const barePath = path.join(tmp, 'bare.git');
@@ -105,7 +103,7 @@ async function migrateRepo(repo, rootDir) {
     const { stdout: existingBranches } = await execa('git', ['branch', '--list', targetBranch], { cwd: rootDir });
 
     if (!existingBranches.trim()) {
-      console.log(`🟢 Creo branch: ${targetBranch}`);
+      console.log(`🟢 Creating branch: ${targetBranch}`);
       await run(['git', 'checkout', '--orphan', targetBranch], { cwd: rootDir });
       await run(['git', 'reset', '--hard'], { cwd: rootDir });
       await run(['git', 'commit', '--allow-empty', '-m', `chore: init ${targetBranch}`], { cwd: rootDir });
@@ -132,7 +130,7 @@ async function merge() {
   const configPath = path.join(rootDir, CONFIG_FILENAME);
 
   if (!fs.existsSync(configPath)) {
-    logError(`File di configurazione non trovato: ${CONFIG_FILENAME}`);
+    logError(`Configuration file not found: ${CONFIG_FILENAME}`);
     process.exit(1);
   }
 
@@ -140,7 +138,7 @@ async function merge() {
   const defaultBranch = config.default_branch || 'main';
 
   if (!fs.existsSync(path.join(rootDir, '.git'))) {
-    logStep('Inizializzazione del monorepo Git...');
+    logStep('Initializing monorepo Git...');
     await run(['git', 'init'], { cwd: rootDir });
     await run(['git', 'checkout', '-b', defaultBranch], { cwd: rootDir });
     await run(['git', 'commit', '--allow-empty', '-m', 'chore: init monorepo'], { cwd: rootDir });
@@ -163,18 +161,18 @@ async function merge() {
     }
   }
 
-  console.log('\n✅ Tutti i repository sono stati migrati con successo!');
+  console.log('\n✅ All repositories have been successfully migrated!');
 }
 
 function init(){
     const configPath = path.join(process.cwd(), CONFIG_FILENAME);
     if (fs.existsSync(configPath)) {
-        console.log(`📝 Il file ${CONFIG_FILENAME} esiste già.`);
+        console.log(`📝 The file ${CONFIG_FILENAME} already exists.`);
         process.exit(0);
     }
     fs.writeFileSync(configPath, JSON.stringify(defaultConfig, null, 2));
-    console.log(`📝 File di configurazione creato: ${configPath}`);
-    console.log("🔧 Modifica il file con i tuoi percorsi reali e rilancia lo script.");
+    console.log(`📝 Configuration file created: ${configPath}`);
+    console.log("🔧 Edit the file with your real paths and rerun the script.");
 }
 
 
@@ -192,3 +190,5 @@ async function main() {
 }
 
 main();
+
+export { init };
