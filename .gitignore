@@ -145,3 +145,5 @@ __MACOSX/
 .AppleDouble
 .LSOverride
 Icon[
+
+.secrets
