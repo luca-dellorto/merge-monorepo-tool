@@ -1,6 +1,6 @@
 {
   "name": "merge-monorepo-tool",
-  "version": "0.0.0-development",
+  "version": "1.0.0",
   "description": "CLI tool to merge multiple repositories into a monorepo while preserving Git history.",
   "author": "Luca Dell'Orto",
   "main": "index.js",
